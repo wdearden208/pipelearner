@@ -6,25 +6,30 @@
 #' summarized tibble.
 #'
 #' @inheritParams pipelearner_params
+#' @param quiet logical, if quiet is FALSE, prints message every time a model
+#' is being fit
 #' @export
 #'
 #' @examples
 #' pl <- pipelearner(mtcars, lm, mpg ~ .)
 #' learn(pl)
-learn <- function(pl) {
+learn <- function(pl, quiet = TRUE) {
   UseMethod("learn")
 }
 
 #' @export
-learn.default <- function(pl) {
+learn.default <- function(pl, quiet = TRUE) {
   stop("`learn` should only be used with a pipelearner object")
 }
 
 #' @export
-learn.pipelearner <- function(pl) {
+learn.pipelearner <- function(pl, quiet = TRUE) {
 
   if (is.null(pl$models))
     stop("No models to learn with. Add using `learn_models`")
+
+  if (!quiet)
+    pl$models$.f <- purrr::map2(pl$models$.f, pl$models$model, add_message)
 
   # Temporarily store all fitted models with list elements referenced by .id
   pl$fits <- fit_all(pl)
@@ -33,6 +38,14 @@ learn.pipelearner <- function(pl) {
   recover_fits(pl)
 }
 
+add_message <- function(f, model) {
+  force(f)
+  force(model)
+  function(...) {
+    message("Running model: ", model,"\tWith arguments: ", deparse(substitute(...)))
+    f(...)
+  }
+}
 
 fit_all <- function(pl) {
   # Fit all models
