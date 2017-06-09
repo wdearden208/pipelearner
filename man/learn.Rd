@@ -4,10 +4,13 @@
 \alias{learn}
 \title{Learn from data}
 \usage{
-learn(pl)
+learn(pl, message = FALSE)
 }
 \arguments{
 \item{pl}{pipelearner object. See \code{\link{pipelearner}}}
+
+\item{quiet}{logical, if quiet is FALSE, prints message every time a model
+is being fit}
 }
 \description{
 \code{learn} conducts the steps needed to learn/fit all of the specified
@@ -19,4 +22,3 @@ summarized tibble.
 pl <- pipelearner(mtcars, lm, mpg ~ .)
 learn(pl)
 }
-

@@ -44,4 +44,3 @@ learn_cvpairs(pl, crossv_kfold, k = 5)
 Example functions that can be used for argument \code{.f}:
   \code{\link[modelr]{crossv_mc}}, \code{\link[modelr]{crossv_kfold}}
 }
-
